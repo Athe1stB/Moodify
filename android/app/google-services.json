@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "776969106075",
+    "project_id": "moodify-b3c2d",
+    "storage_bucket": "moodify-b3c2d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:776969106075:android:4eaced335aaed4a67a4c3e",
+        "android_client_info": {
+          "package_name": "com.lbcc.moodify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "776969106075-pa09thaa2mcl99sffntd723uo9lscbov.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lbcc.moodify",
+            "certificate_hash": "d5ec0d8b3d90637e5efe08a97ff7f171b59b19c7"
+          }
+        },
+        {
+          "client_id": "776969106075-1hh5q9gae19l5gto9h3amqno9dr6ektr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsZF14Rf78IAnE675REN8FNE9CHS2fdcw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "776969106075-1hh5q9gae19l5gto9h3amqno9dr6ektr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
