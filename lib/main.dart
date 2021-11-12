@@ -79,6 +79,13 @@ class _LoadingState extends State<Loading> {
           color: Colors.red,
           size: 80,
         ),
+        Text(
+          'Moodify',
+          style: TextStyle(
+            fontSize: 30,
+            color: Colors.red,
+          ),
+        ),
       ],
     );
   }
