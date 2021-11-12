@@ -1,9 +1,11 @@
+import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:moodify/constants.dart';
+import 'package:moodify/screens/GetMood.dart';
 
 void main() {
   runApp(MyApp());
@@ -34,6 +36,19 @@ class _LoadingState extends State<Loading> {
     FirebaseAuth mAuth = FirebaseAuth.instance;
     dynamic currentUserSigned = mAuth.currentUser;
 
+    dynamic cameras, firstCamera;
+
+    WidgetsFlutterBinding.ensureInitialized();
+    cameras = await availableCameras();
+    firstCamera = cameras.first;
+
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => GetMood(
+                  cameras: cameras,
+                )));
+
     if (currentUserSigned != null) {
       String currentEmail = currentUserSigned.email.toString();
 
@@ -56,9 +71,15 @@ class _LoadingState extends State<Loading> {
 
   @override
   Widget build(BuildContext context) {
-    return SpinKitSpinningLines(
-      color: Colors.red,
-      size: 80,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SpinKitSpinningLines(
+          color: Colors.red,
+          size: 80,
+        ),
+      ],
     );
   }
 }
