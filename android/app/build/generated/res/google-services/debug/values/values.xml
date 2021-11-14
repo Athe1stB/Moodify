@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">776969106075-1hh5q9gae19l5gto9h3amqno9dr6ektr.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">776969106075</string>
+    <string name="google_api_key" translatable="false">AIzaSyCsZF14Rf78IAnE675REN8FNE9CHS2fdcw</string>
+    <string name="google_app_id" translatable="false">1:776969106075:android:4eaced335aaed4a67a4c3e</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyCsZF14Rf78IAnE675REN8FNE9CHS2fdcw</string>
+    <string name="google_storage_bucket" translatable="false">moodify-b3c2d.appspot.com</string>
+    <string name="project_id" translatable="false">moodify-b3c2d</string>
+</resources>

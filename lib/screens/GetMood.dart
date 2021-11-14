@@ -5,6 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:android_intent/android_intent.dart';
+import 'package:android_intent/flag.dart';
+import 'package:flutter/material.dart';
+import 'package:platform/platform.dart';
 
 class GetMood extends StatefulWidget {
   const GetMood({
@@ -81,6 +85,12 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             await _initializeControllerFuture;
 
             final image = await _controller.takePicture();
+
+            final AndroidIntent intent = const AndroidIntent(
+              action: 'action_view',
+              data: 'https://youtu.be/HPkydJOXXNs',
+            );
+            intent.launch();
 
             // await Navigator.of(context).push(
             //   MaterialPageRoute(

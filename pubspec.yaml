@@ -40,6 +40,7 @@ dependencies:
   firebase_storage: ^10.1.0
   flutter_spinkit: ^5.1.0
   camera: ^0.9.4+3
+  android_intent: ^2.0.2
   
 dev_dependencies:
   flutter_test:
@@ -57,7 +58,18 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
+  fonts:
+    - family: Pacifico     
+      fonts:
+        - asset: fonts/Pacifico.ttf
+    - family: Kanit     
+      fonts:
+        - asset: fonts/Kanit.ttf
+    - family: LuckiestGuy     
+      fonts:
+        - asset: fonts/LuckiestGuy.ttf
+  assets:
+    - images/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
