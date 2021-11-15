@@ -4,6 +4,8 @@ import 'package:moodify/constants.dart';
 import 'package:moodify/screens/Dashboard.dart';
 
 class LoginPage extends StatefulWidget {
+  LoginPage(this.cameras);
+  final dynamic cameras;
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -93,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                             email: email, password: password)
                         .then((value) {
                       Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) => DashBoard()));
+          MaterialPageRoute(builder: (BuildContext context) => DashBoard(widget.cameras)));
                     });
                   },
                   child: Card(

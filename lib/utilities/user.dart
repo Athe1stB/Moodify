@@ -27,15 +27,24 @@ class Profile {
       if (name == null) name = 'Doctor';
       if (age == null) age = 0;
 
-      Map<int, String> tempMap = {};
-      Map<String, int> mp = {};
+      dynamic favChannel = [];
+      Map<String, dynamic> favVideos = {
+        'surprise': [],
+        'sad': [],
+        'happy': [],
+        'fear': [],
+        'disgust': [],
+        'angry': [],
+        'trending': [],
+        'neutral': []
+      };
 
       await userList.doc(email).set({
         'name': name,
         'age': age,
         'email': email,
-        'favChannel': mp,
-        'favVideos': tempMap,
+        'favChannel': favChannel,
+        'favVideos': favVideos,
       });
     }
 

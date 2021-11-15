@@ -15,8 +15,8 @@ class SearchTool {
     try {
       http.Response response = await http.get(url);
 
-      print(response.statusCode);
-      print(response.body);
+      // print(response.statusCode);
+      // print(response.body);
 
       if (response.statusCode == 200) {
         String data = response.body;

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:moodify/constants.dart';
-import 'login.dart';
-import 'signup.dart';
+import 'package:moodify/screens/login.dart';
+import 'package:moodify/screens/signUp.dart';
 
 class HomePage extends StatelessWidget {
+  final dynamic cameras;
+  HomePage(this.cameras);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +28,7 @@ class HomePage extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) => LoginPage()));
+                          builder: (BuildContext context) => LoginPage(cameras)));
                 },
                 child: Card(
                   elevation: 0,
@@ -51,7 +54,7 @@ class HomePage extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) => SignUpPage()));
+                          builder: (BuildContext context) => SignUpPage(cameras)));
                 },
                 child: Card(
                   elevation: 0,

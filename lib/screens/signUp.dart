@@ -5,6 +5,8 @@ import 'package:moodify/screens/Dashboard.dart';
 import 'package:moodify/utilities/user.dart';
 
 class SignUpPage extends StatefulWidget {
+  SignUpPage(this.cameras);
+  final dynamic cameras;
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
@@ -172,7 +174,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (BuildContext context) => DashBoard()));
+                              builder: (BuildContext context) => DashBoard(widget.cameras)));
                     },
                     child: Card(
                       color: Colors.transparent,

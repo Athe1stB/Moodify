@@ -53,11 +53,11 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
   Map<int, String> mapper = {
-    0: 'anger',
+    0: 'angry',
     1: 'disgust',
     2: 'fear',
-    3: 'happiness',
-    4: 'sadness',
+    3: 'happy',
+    4: 'sad',
     5: 'surprise',
     6: 'neutral',
   };
@@ -172,6 +172,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               }
 
               print(mapper[index]);
+
+              Navigator.pop(context, mapper[index]);
+
             } catch (e) {
               print(e);
             }

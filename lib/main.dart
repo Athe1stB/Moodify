@@ -44,23 +44,20 @@ class _LoadingState extends State<Loading> {
     cameras = await availableCameras();
     firstCamera = cameras.first;
 
-    // await Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //         builder: (BuildContext context) => GetMood(
-    //               cameras: cameras,
-    //             )));
-
     if (currentUserSigned != null) {
       String currentEmail = currentUserSigned.email.toString();
 
       // FirebaseAuth.instance.signOut();
-      await Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) => DashBoard()));
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => DashBoard(cameras)));
       SystemNavigator.pop();
     } else {
-      await Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) => HomePage()));
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => HomePage(cameras)));
       SystemNavigator.pop();
     }
   }
@@ -81,12 +78,11 @@ class _LoadingState extends State<Loading> {
           color: Colors.red,
           size: 80,
         ),
+        SizedBox(height: 10),
         Text(
           'Moodify',
           style: TextStyle(
-            fontSize: 30,
-            color: Colors.red,
-          ),
+              fontSize: 30, color: Colors.red, fontFamily: 'luckiestGuy'),
         ),
       ],
     );
