@@ -4,7 +4,6 @@ import 'login.dart';
 import 'signup.dart';
 
 class HomePage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,8 +25,7 @@ class HomePage extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              LoginPage()));
+                          builder: (BuildContext context) => LoginPage()));
                 },
                 child: Card(
                   elevation: 0,
@@ -53,8 +51,7 @@ class HomePage extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              SignUpPage()));
+                          builder: (BuildContext context) => SignUpPage()));
                 },
                 child: Card(
                   elevation: 0,

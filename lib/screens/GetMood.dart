@@ -1,4 +1,6 @@
+import 'dart:math';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +11,10 @@ import 'package:android_intent/android_intent.dart';
 import 'package:android_intent/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:platform/platform.dart';
+import 'package:tflite_flutter/tflite_flutter.dart';
+import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:image/image.dart' as img;
 
 class GetMood extends StatefulWidget {
   const GetMood({
@@ -46,6 +52,15 @@ class TakePictureScreen extends StatefulWidget {
 class TakePictureScreenState extends State<TakePictureScreen> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
+  Map<int, String> mapper = {
+    0: 'anger',
+    1: 'disgust',
+    2: 'fear',
+    3: 'happiness',
+    4: 'sadness',
+    5: 'surprise',
+    6: 'neutral',
+  };
 
   @override
   void initState() {
@@ -85,6 +100,78 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             await _initializeControllerFuture;
 
             final image = await _controller.takePicture();
+
+            final inputImage = InputImage.fromFilePath(image.path);
+
+            final faceDetector = GoogleMlKit.vision.faceDetector();
+
+            final List<Face> faces =
+                await faceDetector.processImage(inputImage);
+
+            int x = faces[0].boundingBox.left.toInt();
+            int y = faces[0].boundingBox.top.toInt();
+            int w = faces[0].boundingBox.width.toInt();
+            int h = faces[0].boundingBox.height.toInt();
+            var bytes = await image.readAsBytes();
+
+            File f = File(image.path);
+
+            var decodedImage = await decodeImageFromList(f.readAsBytesSync());
+
+            img.Image faceCrop = img.Image.fromBytes(
+              decodedImage.width,
+              decodedImage.height,
+              bytes,
+            );
+
+            faceCrop = img.copyCrop(faceCrop, x, y, w, h);
+            faceCrop = img.copyResize(faceCrop, height: 48, width: 48);
+            faceCrop = img.grayscale(faceCrop);
+
+            Interpreter _interpreter =
+                await Interpreter.fromAsset("model.tflite");
+
+            var _inputShape = _interpreter.getInputTensor(0).shape as List<int>;
+            var _outputShape =
+                _interpreter.getOutputTensor(0).shape as List<int>;
+            var _inputType = _interpreter.getInputTensor(0).type as TfLiteType;
+            var _outputType =
+                _interpreter.getOutputTensor(0).type as TfLiteType;
+
+            var _outputBuffer =
+                TensorBuffer.createFixedSize(_outputShape, _outputType);
+
+            var _inputImage = TensorImage(_inputType);
+            _inputImage.loadImage(faceCrop);
+            _inputImage = ImageProcessorBuilder()
+                .add(ResizeWithCropOrPadOp(
+                  _inputImage.height,
+                  _inputImage.width,
+                ))
+                .add(ResizeOp(_inputShape[1], _inputShape[2],
+                    ResizeMethod.NEAREST_NEIGHBOUR))
+                .build()
+                .process(_inputImage);
+
+            var rgb = _inputImage.buffer.asFloat32List();
+            Float32List gray = Float32List(rgb.length ~/ 3);
+
+            for (var i = 0; i < gray.length; ++i) {
+              gray[i] = (0.299 * rgb[i * 3] +
+                      0.587 * rgb[i * 3 + 1] +
+                      0.114 * rgb[i * 3 + 2]) /
+                  255;
+            }
+
+            _interpreter.run(
+              gray.buffer,
+              _outputBuffer.getBuffer(),
+            );
+
+            List<double> pred = _outputBuffer.getDoubleList();
+            double mx = pred.reduce(max);
+
+            print(mapper[pred.indexOf(mx)]);
 
             final AndroidIntent intent = const AndroidIntent(
               action: 'action_view',
