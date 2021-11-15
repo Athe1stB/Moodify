@@ -96,100 +96,86 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          try {
-            await _initializeControllerFuture;
+          while (true) {
+            try {
+              await _initializeControllerFuture;
+              final image = await _controller.takePicture();
 
-            final image = await _controller.takePicture();
+              final inputImage = InputImage.fromFilePath(image.path);
 
-            final inputImage = InputImage.fromFilePath(image.path);
+              final faceDetector = GoogleMlKit.vision.faceDetector();
 
-            final faceDetector = GoogleMlKit.vision.faceDetector();
+              final List<Face> faces =
+                  await faceDetector.processImage(inputImage);
 
-            final List<Face> faces =
-                await faceDetector.processImage(inputImage);
+              if (faces.isEmpty) continue;
 
-            int x = faces[0].boundingBox.left.toInt();
-            int y = faces[0].boundingBox.top.toInt();
-            int w = faces[0].boundingBox.width.toInt();
-            int h = faces[0].boundingBox.height.toInt();
-            var bytes = await image.readAsBytes();
+              int x = faces[0].boundingBox.left.toInt();
+              int y = faces[0].boundingBox.top.toInt();
+              int w = faces[0].boundingBox.width.toInt();
+              int h = faces[0].boundingBox.height.toInt();
 
-            File f = File(image.path);
+              var bytes = await File(image.path).readAsBytes();
 
-            var decodedImage = await decodeImageFromList(f.readAsBytesSync());
+              img.Image faceCrop = img.decodeImage(bytes) as img.Image;
 
-            img.Image faceCrop = img.Image.fromBytes(
-              decodedImage.width,
-              decodedImage.height,
-              bytes,
-            );
+              faceCrop = img.copyCrop(faceCrop, x, y, w, h);
+              faceCrop = img.copyResize(faceCrop, height: 48, width: 48);
+              // faceCrop = img.grayscale(faceCrop);
 
-            faceCrop = img.copyCrop(faceCrop, x, y, w, h);
-            faceCrop = img.copyResize(faceCrop, height: 48, width: 48);
-            faceCrop = img.grayscale(faceCrop);
+              Interpreter interpreter =
+                  await Interpreter.fromAsset("model.tflite");
 
-            Interpreter _interpreter =
-                await Interpreter.fromAsset("model.tflite");
+              var _inputShape = interpreter.getInputTensor(0).shape;
+              var _outputShape = interpreter.getOutputTensor(0).shape;
+              var _inputType = interpreter.getInputTensor(0).type;
+              var _outputType = interpreter.getOutputTensor(0).type;
 
-            var _inputShape = _interpreter.getInputTensor(0).shape as List<int>;
-            var _outputShape =
-                _interpreter.getOutputTensor(0).shape as List<int>;
-            var _inputType = _interpreter.getInputTensor(0).type as TfLiteType;
-            var _outputType =
-                _interpreter.getOutputTensor(0).type as TfLiteType;
+              var _outputBuffer =
+                  TensorBuffer.createFixedSize(_outputShape, _outputType);
 
-            var _outputBuffer =
-                TensorBuffer.createFixedSize(_outputShape, _outputType);
+              var _inputImage = TensorImage(_inputType);
+              _inputImage.loadImage(faceCrop);
+              _inputImage = ImageProcessorBuilder()
+                  .add(ResizeWithCropOrPadOp(
+                    _inputImage.height,
+                    _inputImage.width,
+                  ))
+                  .add(ResizeOp(_inputShape[1], _inputShape[2],
+                      ResizeMethod.NEAREST_NEIGHBOUR))
+                  .build()
+                  .process(_inputImage);
 
-            var _inputImage = TensorImage(_inputType);
-            _inputImage.loadImage(faceCrop);
-            _inputImage = ImageProcessorBuilder()
-                .add(ResizeWithCropOrPadOp(
-                  _inputImage.height,
-                  _inputImage.width,
-                ))
-                .add(ResizeOp(_inputShape[1], _inputShape[2],
-                    ResizeMethod.NEAREST_NEIGHBOUR))
-                .build()
-                .process(_inputImage);
+              var rgb = _inputImage.buffer.asFloat32List();
+              Float32List gray = Float32List(rgb.length ~/ 3);
 
-            var rgb = _inputImage.buffer.asFloat32List();
-            Float32List gray = Float32List(rgb.length ~/ 3);
+              for (var i = 0; i < gray.length; ++i) {
+                gray[i] = (0.299 * rgb[i * 3] +
+                        0.587 * rgb[i * 3 + 1] +
+                        0.114 * rgb[i * 3 + 2]) /
+                    255;
+              }
 
-            for (var i = 0; i < gray.length; ++i) {
-              gray[i] = (0.299 * rgb[i * 3] +
-                      0.587 * rgb[i * 3 + 1] +
-                      0.114 * rgb[i * 3 + 2]) /
-                  255;
+              interpreter.run(
+                gray.buffer,
+                _outputBuffer.getBuffer(),
+              );
+
+              List<double> pred = _outputBuffer.getDoubleList();
+
+              print(pred);
+
+              int index = 0;
+
+              for (var i = 1; i < pred.length; ++i) {
+                if (pred[index] < pred[i]) index = i;
+              }
+
+              print(mapper[index]);
+            } catch (e) {
+              print(e);
             }
-
-            _interpreter.run(
-              gray.buffer,
-              _outputBuffer.getBuffer(),
-            );
-
-            List<double> pred = _outputBuffer.getDoubleList();
-            double mx = pred.reduce(max);
-
-            print(mapper[pred.indexOf(mx)]);
-
-            final AndroidIntent intent = const AndroidIntent(
-              action: 'action_view',
-              data: 'https://youtu.be/HPkydJOXXNs',
-            );
-            intent.launch();
-
-            // await Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (context) => DisplayPictureScreen(
-            //       // Pass the automatically generated path to
-            //       // the DisplayPictureScreen widget.
-            //       imagePath: image.path,
-            //     ),
-            //   ),
-            // );
-          } catch (e) {
-            print(e);
+            break;
           }
         },
         child: const Icon(Icons.camera_alt),
