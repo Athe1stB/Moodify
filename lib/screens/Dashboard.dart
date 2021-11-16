@@ -8,6 +8,7 @@ import 'package:moodify/screens/PredictedSongs.dart';
 import 'package:moodify/screens/favChannels.dart';
 import 'package:moodify/screens/favVideos.dart';
 import 'package:moodify/screens/favouritedList.dart';
+import 'package:moodify/screens/homePage.dart';
 import 'package:moodify/screens/listSongs.dart';
 
 class DashBoard extends StatefulWidget {
@@ -27,8 +28,8 @@ class _DashBoardState extends State<DashBoard> {
       finalQuery = '',
       msg = '';
   int age = 0;
-  late Map<int, dynamic> favVideos;
-  late Map<String, dynamic> favChannel;
+  dynamic favVideos = {};
+  dynamic favChannel = [];
 
   void initializeAllParams() async {
     dynamic tempusercurrent = FirebaseAuth.instance.currentUser;
@@ -307,6 +308,17 @@ class _DashBoardState extends State<DashBoard> {
                       ),
                     ),
                   ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                HomePage(widget.cameras)));
+                  },
+                  child: Text('Sign Out'),
                 ),
               ],
             ),
