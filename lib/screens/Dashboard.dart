@@ -126,22 +126,14 @@ class _DashBoardState extends State<DashBoard> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20))),
                             height: 40,
-                            child: Row(
-                              children: [
-                                SizedBox(width: 10),
-                                Icon(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                child: Icon(
                                   Icons.camera_alt_rounded,
                                   color: Colors.blue[900],
                                 ),
-                                SizedBox(width: 10),
-                                Text(
-                                  "Let's see how are you !",
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.blue,
-                                      fontFamily: 'kanit'),
-                                )
-                              ],
+                              ),
                             ),
                           ),
                         ),
