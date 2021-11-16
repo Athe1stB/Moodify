@@ -174,7 +174,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (BuildContext context) => DashBoard(widget.cameras)));
+                              builder: (BuildContext context) =>
+                                  DashBoard(widget.cameras)));
+                      Navigator.pop(context);
                     },
                     child: Card(
                       color: Colors.transparent,

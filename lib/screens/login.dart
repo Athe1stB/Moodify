@@ -94,9 +94,13 @@ class _LoginPageState extends State<LoginPage> {
                         .signInWithEmailAndPassword(
                             email: email, password: password)
                         .then((value) {
-                      Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) => DashBoard(widget.cameras)));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  DashBoard(widget.cameras)));
                     });
+                    Navigator.pop(context);
                   },
                   child: Card(
                     color: Colors.transparent,
