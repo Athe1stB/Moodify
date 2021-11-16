@@ -24,11 +24,13 @@ class HomePage extends StatelessWidget {
               Icon(Icons.person_rounded, color: Colors.white, size: 100),
               GestureDetector(
                 key: Key('login'),
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  await Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) => LoginPage(cameras)));
+                          builder: (BuildContext context) =>
+                              LoginPage(cameras)));
+                  Navigator.pop(context);
                 },
                 child: Card(
                   elevation: 0,
@@ -50,11 +52,13 @@ class HomePage extends StatelessWidget {
               SizedBox(height: 10),
               GestureDetector(
                 key: Key('signUp'),
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  await Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) => SignUpPage(cameras)));
+                          builder: (BuildContext context) =>
+                              SignUpPage(cameras)));
+                  Navigator.pop(context);
                 },
                 child: Card(
                   elevation: 0,

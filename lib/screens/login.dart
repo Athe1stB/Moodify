@@ -93,14 +93,14 @@ class _LoginPageState extends State<LoginPage> {
                     await FirebaseAuth.instance
                         .signInWithEmailAndPassword(
                             email: email, password: password)
-                        .then((value) {
-                      Navigator.push(
+                        .then((value) async {
+                      await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
                                   DashBoard(widget.cameras)));
+                      Navigator.pop(context);
                     });
-                    Navigator.pop(context);
                   },
                   child: Card(
                     color: Colors.transparent,

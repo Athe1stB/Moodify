@@ -171,7 +171,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       );
                       Profile newUser = new Profile(name, age);
                       await newUser.addToCloud();
-                      Navigator.push(
+                      await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>

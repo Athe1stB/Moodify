@@ -310,13 +310,14 @@ class _DashBoardState extends State<DashBoard> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
-                    FirebaseAuth.instance.signOut();
-                    Navigator.push(
+                  onPressed: () async {
+                    await FirebaseAuth.instance.signOut();
+                    await Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
                                 HomePage(widget.cameras)));
+                    Navigator.pop(context);
                   },
                   child: Text('Sign Out'),
                 ),
